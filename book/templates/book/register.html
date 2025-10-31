@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block main %}
+    <main class="auth-container">
+        <div class="auth-card">
+            <h1>Ro'yxatdan o'tish</h1>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="alert">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
+            <form action="{% url 'register_user' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="fullname">To'liq ism:</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Parol:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Parolni tasdiqlang:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">Ro'yxatdan o'tish</button>
+            </form>
+
+            <p class="auth-link">Allaqachon akkauntingiz bormi?
+                <a href="{% url 'login_user' %}">Kirish</a>
+            </p>
+        </div>
+    </main>
+{% endblock main %}

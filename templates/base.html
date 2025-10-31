@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitoblar Info - Kitoblar haqida ma'lumot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <span class="logo-icon">📚</span>
+                <span class="logo-text">Fn31 Kitoblar</span>
+            </div>
+
+            <nav class="navbar-menu">
+                <a href="{% url 'dashboard' %}" class="nav-link {% if request.path == '/' %} active {% endif %}">Bosh sahifa</a>
+                <a href="{% url 'about' %}" class="nav-link {% if request.path == '/about/' %} active {% endif %}">Haqida</a>
+            </nav>
+
+            <div class="navbar-auth">
+                {% if request.user.is_authenticated %}
+                    
+                    <button class="btn-logout" onclick="window.location.href='{% url 'user_logout' %}'">
+                        Chiqish
+                    </button>
+                {% else %}
+                    
+                    <button class="btn-login" onclick="window.location.href='{% url 'login_user' %}'">
+                        Kirish
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        {% block main %}{% endblock main %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Fn31 Kitoblar. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block main %}
+    <main class="auth-container">
+        <div class="auth-card">
+            <h1>Kirish</h1>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="alert">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
+            <form action="{% url 'login_user' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Parol:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Kirish</button>
+            </form>
+
+            <p class="auth-link">Akkauntingiz yo'qmi?
+                <a href="{% url 'register_user' %}">Ro'yxatdan o'tish</a>
+            </p>
+            <p class="auth-link">
+                <a href="{% url 'reset_password' %}">Parolni unutdingizmi?</a>
+            </p>
+        </div>
+    </main>
+{% endblock main %}

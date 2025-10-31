@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% block main %}
+
+<style>
+/* 🌙 Zamonaviy, minimalist dizayn */
+body {
+  font-family: "Inter", "Poppins", sans-serif;
+  background: linear-gradient(145deg, #f8faff, #eef2ff);
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- KITOB KARTASI --- */
+.book-detail-container {
+  max-width: 1100px;
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  padding: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 50px;
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(20px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+.book-image-box {
+  flex: 1;
+  min-width: 320px;
+  text-align: center;
+}
+.book-detail-image {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+.book-detail-image:hover {
+  transform: scale(1.03);
+}
+
+.book-info-box {
+  flex: 2;
+  min-width: 320px;
+}
+
+.book-title {
+  font-size: 2.5rem;
+  color: #111827;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.book-author {
+  font-size: 1.2rem;
+  color: #4f46e5;
+  margin-bottom: 20px;
+}
+
+.book-meta {
+  display: flex;
+  gap: 25px;
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+.book-meta span {
+  background: #eef2ff;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+
+.book-description {
+  font-size: 1.05rem;
+  color: #333;
+  line-height: 1.7;
+  margin-top: 10px;
+}
+
+/* --- LIKE TUGMASI --- */
+.like-form {
+  margin-top: 25px;
+}
+.like-btn {
+  border: none;
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  color: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s ease;
+}
+.like-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(67,56,202,0.3);
+}
+.like-btn.liked {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+/* --- IZOH BO‘LIMI --- */
+.comments-section {
+  max-width: 1000px;
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.07);
+  padding: 40px;
+}
+
+.comments-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1e1b4b;
+  margin-bottom: 25px;
+}
+
+.comment-card {
+  background: #f8f9ff;
+  padding: 18px 20px;
+  border-radius: 14px;
+  margin-bottom: 15px;
+  border-left: 4px solid #6366f1;
+  transition: transform 0.2s ease;
+}
+.comment-card:hover {
+  transform: translateX(5px);
+}
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+}
+.comment-text {
+  margin-top: 10px;
+  color: #333;
+  line-height: 1.6;
+}
+.no-comments {
+  color: #777;
+  text-align: center;
+  font-style: italic;
+}
+
+.comment-form textarea {
+  width: 100%;
+  height: 100px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  resize: none;
+  font-size: 1rem;
+}
+.comment-form button {
+  margin-top: 12px;
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+.comment-form button:hover {
+  background: linear-gradient(135deg, #4338ca, #312e81);
+}
+
+/* --- O‘XSHASH KITOBLAR --- */
+.related-books-section {
+  max-width: 1100px;
+  margin: 60px auto 0;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.07);
+  padding: 40px;
+}
+.related-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1e1b4b;
+  margin-bottom: 25px;
+}
+.related-books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+}
+.related-card {
+  background: #f9f9ff;
+  border-radius: 14px;
+  text-align: center;
+  text-decoration: none;
+  padding: 15px;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.related-card:hover {
+  transform: translateY(-6px);
+  background: #eef2ff;
+}
+.related-image {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.related-title-text {
+  font-size: 1.1rem;
+  color: #1e1b4b;
+  margin-top: 10px;
+}
+.related-author {
+  color: #555;
+  font-size: 0.9rem;
+}
+</style>
+
+<main class="book-detail-page">
+
+  <!-- Asosiy qism -->
+  <section class="book-detail-section">
+    <div class="container book-detail-container">
+      <div class="book-image-box">
+        <img 
+          src="{% if book.image %}{{ book.image.url }}{% else %}/static/images/placeholder.svg{% endif %}" 
+          alt="{{ book.title }}" 
+          class="book-detail-image">
+      </div>
+
+      <div class="book-info-box">
+        <h1 class="book-title">{{ book.title }}</h1>
+        <p class="book-author">✍️ {{ book.author }}</p>
+
+        <div class="book-meta">
+          <span>🌐 {{ book.language|title }}</span>
+          <span>📅 {{ book.year }}</span>
+        </div>
+
+        <p class="book-description">{{ book.description }}</p>
+
+        <form method="post" class="like-form">
+          {% csrf_token %}
+          <button type="submit" name="like" class="like-btn {% if user in book.likes.all %}liked{% endif %}">
+            {% if user in book.likes.all %}
+              ❤️ Yoqtirildi ({{ book.total_likes }})
+            {% else %}
+              🤍 Yoqtirish ({{ book.total_likes }})
+            {% endif %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Izohlar -->
+  <section class="comments-section">
+    <h2 class="comments-title">💬 Foydalanuvchi fikrlari</h2>
+
+    {% for comment in comments %}
+      <div class="comment-card">
+        <div class="comment-header">
+          <span>{{ comment.user.username }}</span>
+          <span>{{ comment.created_at|date:"d M Y, H:i" }}</span>
+        </div>
+        <p class="comment-text">{{ comment.text }}</p>
+      </div>
+    {% empty %}
+      <p class="no-comments">Hozircha izohlar yo‘q 😔</p>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+      <form method="post" class="comment-form">
+        {% csrf_token %}
+        <textarea name="text" placeholder="Izoh yozing..." required></textarea>
+        <button type="submit" name="comment">Yuborish</button>
+      </form>
+    {% else %}
+      <p style="text-align:center; margin-top:15px;">Izoh yozish uchun <a href="/login/">tizimga kiring</a>.</p>
+    {% endif %}
+  </section>
+
+  <!-- O‘xshash kitoblar -->
+  <section class="related-books-section">
+    <h2 class="related-title">📚 Sizga yoqishi mumkin</h2>
+    <div class="related-books-grid">
+      {% for related in related_books %}
+        <a href="{% url 'book_detail' related.pk %}" class="related-card">
+          <img 
+            src="{% if related.image %}{{ related.image.url }}{% else %}/static/images/placeholder.svg{% endif %}" 
+            alt="{{ related.title }}" 
+            class="related-image">
+          <h3 class="related-title-text">{{ related.title }}</h3>
+          <p class="related-author">{{ related.author }}</p>
+        </a>
+      {% empty %}
+        <p class="no-comments">O‘xshash kitoblar topilmadi</p>
+      {% endfor %}
+    </div>
+  </section>
+
+</main>
+
+{% endblock main %}

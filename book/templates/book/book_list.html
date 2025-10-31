@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<section class="books-section">
+    <div class="container">
+
+        <!-- 🔍 Qidiruv va filtr -->
+        <div class="search-filter">
+            <form method="get" class="search-form">
+                <input type="text" name="q" placeholder="Kitob qidirish..." value="{{ request.GET.q }}">
+                <select name="category">
+                    <option value="">Barcha kategoriyalar</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.slug }}" {% if cat.slug == selected_category %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <select name="language">
+                    <option value="">Til</option>
+                    <option value="uz" {% if selected_language == 'uz' %}selected{% endif %}>O‘zbekcha</option>
+                    <option value="en" {% if selected_language == 'en' %}selected{% endif %}>Inglizcha</option>
+                    <option value="ru" {% if selected_language == 'ru' %}selected{% endif %}>Ruscha</option>
+                </select>
+                <button type="submit" class="btn">Qidirish</button>
+            </form>
+        </div>
+
+        <!-- 📚 Kitoblar ro‘yxati -->
+        <div class="books-grid">
+            {% for book in books %}
+            <div class="book-card">
+                <img src="{{ book.image.url }}" alt="{{ book.title }}">
+                <div class="book-info">
+                    <h3>{{ book.title }}</h3>
+                    <p class="author">Muallif: {{ book.author }}</p>
+                    <p class="desc">{{ book.description|truncatewords:20 }}</p>
+
+                    <div class="book-meta">
+                        <span class="category">{{ book.category.name }}</span>
+                        <span class="lang">{{ book.get_language_display }}</span>
+                    </div>
+
+                    <div class="book-actions">
+                        <button class="like-btn" onclick="toggleLike({{ book.id }})">
+                            ❤️ <span id="like-count-{{ book.id }}">{{ book.total_likes }}</span>
+                        </button>
+                        <button class="comment-btn" onclick="openCommentModal({{ book.id }})">💬 Izoh qo‘shish</button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="no-books">Hech qanday kitob topilmadi 😔</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 💬 Izoh modal oynasi -->
+<div id="commentModal" class="modal">
+    <div class="modal-content">
+        <h3>Izoh yozish</h3>
+        <textarea id="commentText" placeholder="Izohingizni kiriting..."></textarea>
+        <div class="modal-actions">
+            <button class="btn" id="sendCommentBtn">Yuborish</button>
+            <button class="btn-secondary" onclick="closeCommentModal()">Bekor qilish</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentBookId = null;
+
+function toggleLike(bookId) {
+    fetch(`/books/${bookId}/like/`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.total_likes !== undefined) {
+                document.getElementById(`like-count-${bookId}`).textContent = data.total_likes;
+            }
+        });
+}
+
+function openCommentModal(bookId) {
+    currentBookId = bookId;
+    document.getElementById("commentModal").style.display = "flex";
+}
+
+function closeCommentModal() {
+    document.getElementById("commentModal").style.display = "none";
+}
+
+document.getElementById("sendCommentBtn").addEventListener("click", function() {
+    const text = document.getElementById("commentText").value;
+    fetch(`/books/${currentBookId}/comment/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `text=${encodeURIComponent(text)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Izoh yuborildi!");
+        closeCommentModal();
+        document.getElementById("commentText").value = "";
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+{% endblock %}
