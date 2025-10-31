@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     
-    'unfold',
+
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,7 +126,19 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+import os
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Statik fayllar URL
+STATIC_URL = '/static/'
+
+# Agar statik fayllar qo‘lda saqlangan bo‘lsa
+STATICFILES_DIRS = [BASE_DIR / "static"]  # sizning mavjud statik papkangiz
+
+# Collectstatic uchun papka (majburiy!)
+STATIC_ROOT = BASE_DIR / "staticfiles"
 LOGIN_URL = '/login/'
 
 # Default primary key field type
